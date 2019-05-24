@@ -32,10 +32,11 @@ app.post('/', async (req, res) => {
       text,
     }
   };
-
   try {
-    await handler.handle({ torralbotCommand, arguments });
-    console.log('afterhandle', data )
+    const extraData = await handler.handle({ torralbotCommand, arguments });
+    if (extraData) {
+      data.form.text += `\n${extraData}`;
+    }
     await request.post('https://slack.com/api/chat.postMessage', data);
     res.json();
   } catch(err) {

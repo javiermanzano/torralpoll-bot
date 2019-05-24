@@ -3,7 +3,7 @@ const restClient = require('./rest-client');
 const COMMAND_TEXT_MAPPER = {
   help: () => `Hi! :wave: \n I'm the most fair & easy poll creator \n 100% secure. No manipulation allowed`,
   create: () => `New poll created. Let's vote: http://torralbot.com/8uusn28J`,
-  status: () => `Here are the results: http://torralbot.com/8uusn28J`,
+  status: () => `Here are the results:`,
   list: () => `All the available polls`,
 };
 
@@ -21,8 +21,15 @@ const COMMAND_HANDLERS = {
   status: async ({ arguments }) => {
     console.log('--> requesting poll status', arguments);
     const id = arguments[0];
-    const response = await restClient.get({ url: `${id}/status` })
-    console.log({ response });
+    const response = await restClient.get({ url: `${id}/details` })
+    const jsonBody = JSON.parse(response);
+    console.log({ jsonBody });
+    const text = jsonBody.options.map(option => {
+      const hasVotes = option.votes.length > 0;
+      const votesList = `(${option.votes.join(', ')})`;
+      return `${option.name} -> ${option.votes.length} votes ${hasVotes ? votesList: ''}`;
+    });
+    return text.join('\n');
   },
   list: async () => () => {
     console.log('--> requesting polls list');
@@ -61,7 +68,7 @@ const process = ({ command }) => {
 };
 
 const handle = async ({ torralbotCommand, arguments }) => {
-  await COMMAND_HANDLERS[torralbotCommand]({ arguments });
+  return await COMMAND_HANDLERS[torralbotCommand]({ arguments });
 }
 
 module.exports = {
