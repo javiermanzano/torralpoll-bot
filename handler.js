@@ -1,3 +1,5 @@
+const restClient = require('./rest-client');
+
 const COMMAND_TEXT_MAPPER = {
   help: () => `Hi! :wave: \n I'm the most fair & easy poll creator \n 100% secure. No manipulation allowed`,
   create: () => `New poll created. Let's vote: http://torralbot.com/8uusn28J`,
@@ -6,14 +8,19 @@ const COMMAND_TEXT_MAPPER = {
 };
 
 const COMMAND_HANDLERS = {
-  help: () => {},
-  create: ({ arguments }) => {
+  help: async () => {},
+  create: async ({ arguments }) => {
     console.log('--> requesting poll URL with options', { arguments });
+    try {
+      await restClient.post({ url: 'create', body: {options: arguments} })
+    } catch(err) {
+      console.error(err);
+    }
   },
-  status: () => {
+  status: async () => {
     console.log('--> requesting poll status');
   },
-  list: () => () => {
+  list: async () => () => {
     console.log('--> requesting polls list');
   },
 };
@@ -50,7 +57,7 @@ const process = ({ command }) => {
 };
 
 const handle = async ({ torralbotCommand, arguments }) => {
-  COMMAND_HANDLERS[torralbotCommand]({ arguments });
+  await COMMAND_HANDLERS[torralbotCommand]({ arguments });
 }
 
 module.exports = {
