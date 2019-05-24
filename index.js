@@ -7,7 +7,7 @@ const request = require('request-promise');
 const handler = require('./handler');
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 app.listen(process.env.PORT || PORT, function () {
   console.log(`Torralpoll is listening on port ${PORT}`);
 });
