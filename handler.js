@@ -2,7 +2,7 @@ const restClient = require('./rest-client');
 
 const COMMAND_TEXT_MAPPER = {
   help: () => `Hi! :wave: \n I'm the most fair & easy poll creator \n 100% secure. No manipulation allowed`,
-  create: () => `New poll created. Let's vote: http://torralbot.com/8uusn28J`,
+  create: () => `New poll created. Let's vote: `,
   status: () => `Here are the results:`,
   list: () => `All the available polls`,
 };
@@ -14,6 +14,7 @@ const COMMAND_HANDLERS = {
     try {
       const response = await restClient.post({ url: 'create', body: {options: arguments} })
       console.log({ response });
+      return response.url;
     } catch(err) {
       console.error(err);
     }
