@@ -37,8 +37,11 @@ const COMMAND_HANDLERS = {
     });
     return text.join('\n');
   },
-  list: async () => () => {
+  list: async () => {
     console.log('--> requesting polls list');
+    const response = await restClient.get({ url: `list` });
+    console.log({ response })
+    return JSON.parse(response).polls.map(o => `${!o.active ? '🔴': '🔵'} ${o.name} -> ${o._id}\n`)
   },
   close: async ({ arguments }) => {
     console.log('--> requesting poll status', arguments);
