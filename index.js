@@ -24,8 +24,8 @@ app.get('/', (req, res) => {
 
 app.post('/', (req, res) => {
   const command = req.body.text;
-  const { torralbotCommand, text } = handler.process({ command });
-  console.log({ torralbotCommand, text })
+  const { torralbotCommand, text, arguments } = handler.process({ command });
+  console.log({ torralbotCommand, text, arguments })
   var data = {
     form: {
       token: process.env.SLACK_AUTH_TOKEN,
