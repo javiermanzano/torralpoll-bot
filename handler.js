@@ -12,13 +12,17 @@ const COMMAND_HANDLERS = {
   create: async ({ arguments }) => {
     console.log('--> requesting poll URL with options', { arguments });
     try {
-      await restClient.post({ url: 'create', body: {options: arguments} })
+      const response = await restClient.post({ url: 'create', body: {options: arguments} })
+      console.log({ response });
     } catch(err) {
       console.error(err);
     }
   },
-  status: async () => {
-    console.log('--> requesting poll status');
+  status: async ({ arguments }) => {
+    console.log('--> requesting poll status', arguments);
+    const id = arguments[0];
+    const response = await restClient.get({ url: `${id}/status` })
+    console.log({ response });
   },
   list: async () => () => {
     console.log('--> requesting polls list');
