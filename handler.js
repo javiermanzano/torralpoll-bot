@@ -1,3 +1,12 @@
+const COMMAND_TEXT_MAPPER = {
+  help: () => `Hi! :wave: \n I'm the most fair & easy poll creator \n 100% secure. No manipulation allowed`,
+  create: () => `New poll created. Let's vote: http://torralbot.com/8uusn28J`,
+  status: () => `Here are the results: http://torralbot.com/8uusn28J`,
+  list: () => `All the available polls`,
+};
+
+const AVAILABLE_COMMANDS = Object.keys(COMMAND_TEXT_MAPPER);
+
 const getArguments = (commandArguments) => (
   commandArguments.map(commandOption => commandOption.replace(/"/g,''))
 );
@@ -15,15 +24,10 @@ const process = ({ command }) => {
   if (splittedCommand.length > 1) {
     arguments = getArguments(splittedCommand.slice(1));
   }
-  console.log({ arguments })
   const responseGenerator = processResponseDecorator({ arguments, torralbotCommand });
-  if (torralbotCommand === 'help') {
+  if (AVAILABLE_COMMANDS.indexOf(torralbotCommand)) {
     return responseGenerator({
-      text: `Hi! :wave: \n I'm the most fair & easy poll creator \n 100% secure. No manipulation allowed`,
-    });
-  } else if (torralbotCommand === 'create') {
-    return responseGenerator({
-      text: `New poll created. Let's vote: http://torralbot.com/8uusn28J`,
+      text: COMMAND_TEXT_MAPPER[torralbotCommand]()
     });
   } else {
     return {

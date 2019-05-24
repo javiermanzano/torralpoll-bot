@@ -25,7 +25,6 @@ app.get('/', (req, res) => {
 app.post('/', (req, res) => {
   const command = req.body.text;
   const { torralbotCommand, text, arguments } = handler.process({ command });
-  console.log({ torralbotCommand, text, arguments })
   var data = {
     form: {
       token: process.env.SLACK_AUTH_TOKEN,
@@ -34,7 +33,6 @@ app.post('/', (req, res) => {
     }
   };
   request.post('https://slack.com/api/chat.postMessage', data, function (error, response, body) {
-    // Sends welcome message
     res.json();
   });
 });
