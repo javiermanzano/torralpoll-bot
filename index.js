@@ -2,7 +2,7 @@ require('dotenv').config();
 
 const express = require('express');
 const bodyParser = require('body-parser');
-const request = require('request');
+const request = require('request-promise');
 
 const handler = require('./handler');
 
@@ -22,7 +22,7 @@ app.get('/', (req, res) => {
   });
 });
 
-app.post('/', (req, res) => {
+app.post('/', async (req, res) => {
   const command = req.body.text;
   const { torralbotCommand, text, arguments } = handler.process({ command });
   var data = {
@@ -32,7 +32,13 @@ app.post('/', (req, res) => {
       text,
     }
   };
-  request.post('https://slack.com/api/chat.postMessage', data, function (error, response, body) {
+
+  try {
+    await handler.handle({ torralbotCommand, arguments });
+    await request.post('https://slack.com/api/chat.postMessage', data);
     res.json();
-  });
+  } catch(err) {
+    console.error(err);
+    res.send(500);
+  }
 });

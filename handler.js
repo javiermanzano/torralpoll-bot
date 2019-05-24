@@ -5,6 +5,19 @@ const COMMAND_TEXT_MAPPER = {
   list: () => `All the available polls`,
 };
 
+const COMMAND_HANDLERS = {
+  help: () => {},
+  create: ({ arguments }) => {
+    console.log('--> requesting poll URL with options', { arguments });
+  },
+  status: () => {
+    console.log('--> requesting poll status');
+  },
+  list: () => () => {
+    console.log('--> requesting polls list');
+  },
+};
+
 const AVAILABLE_COMMANDS = Object.keys(COMMAND_TEXT_MAPPER);
 
 const getArguments = (commandArguments) => (
@@ -36,8 +49,12 @@ const process = ({ command }) => {
   }
 };
 
+const handle = async ({ torralbotCommand, arguments }) => {
+  COMMAND_HANDLERS[torralbotCommand]({ arguments });
+}
 
 module.exports = {
   process,
   getArguments,
+  handle,
 };
